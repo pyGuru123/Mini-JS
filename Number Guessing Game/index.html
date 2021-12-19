@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Number Guessing Game</title>
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: rgb(60,60,60);
+		}
+
+		.main {
+			left: 50%;
+			top: 50%;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			width: 500px;
+		}
+
+		.title {
+			color: white;
+			text-align: center;
+		}
+
+		.info {
+			color: white;
+		}
+
+		p {
+			color: white;
+		}
+
+		label {
+			color: white;
+			margin-left: 60px;
+		}
+
+		.previous {
+			color: white;
+			margin: 5px;
+			padding: 3px;
+		}
+
+	</style>
+</head>
+<body>
+	<div class='main'>
+		<h2 class='title'>Number Guessing Game</h2>
+		<p class='info'>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
+
+		<label for='#guessfield'>Enter a guess: </label>
+		<input type="text" id="guessfield">
+		<button class='submit'> Submit </button>
+
+		<p class='previous'></p>
+		<p class='result'></p>
+		<p class='deviation'></p>
+	</div>
+
+	<script type="text/javascript">
+		let number = genRandom();
+		let guesses = ' ';
+		let numGuess = 10;
+
+		let input = document.querySelector('input')
+		let button = document.querySelector('.submit')
+
+		let previous = document.querySelector('.previous')
+		let result = document.querySelector('.result')
+		let deviation = document.querySelector('.deviation')
+		
+		button.onclick = function() {
+			if (previous.textContent == '') {
+				previous.textContent == 'Previous guesses: '
+			}
+
+			if (numGuess > 0) {
+				value = input.value;
+				input.value = '';
+
+				if (value == '') {
+					value = '0'
+				}
+
+				if (value == number) {
+					result.textContent = 'You guessed it right';
+					result.style.backgroundColor = 'rgb(0, 255, 0)';
+					previous.textContent = previous.textContent + `${value} `
+					deviation.textContent = '';
+					gameOver();
+				}
+				else if (value < number) {
+					result.textContent = 'Wrong!'
+					result.style.backgroundColor = 'rgb(255, 0, 0)';
+					previous.textContent = previous.textContent + `${value} `
+					deviation.textContent = 'Last guess was too Low!'
+				}
+				else {
+					result.textContent = 'Wrong!'
+					result.style.backgroundColor = 'rgb(255, 0, 0)';
+					previous.textContent = previous.textContent + `${value} `
+					deviation.textContent = 'Last guess was too High!'
+				}
+
+				numGuess -= 1
+				input.focus()
+			}
+			else {
+				result.textContent = '!!!GAME OVER!!!'
+				result.style.backgroundColor = 'rgb(255, 0, 0)';
+				gameOver()
+			}
+			
+		}
+
+		function genRandom() {
+			num = Math.random();
+			return parseInt(num * 100) + 1
+		}
+
+		function gameOver() {
+
+		}
+	</script>
+</body>
+</html>
