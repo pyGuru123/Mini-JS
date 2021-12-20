@@ -8,7 +8,7 @@
 		body {
 			margin: 0;
 			padding: 0;
-			background-color: rgb(60,60,60);
+			background-color: white;
 		}
 
 		.main {
@@ -17,24 +17,51 @@
 			position: absolute;
 			transform: translate(-50%, -50%);
 			width: 500px;
+			height: 300px;
+			border: 1px solid white;
+			border-radius: 10px;
+			background-color: rgb(255,0,120);
+			padding: 20px;
+			box-shadow: 3px 3px 12px rgb(30, 30, 30);
 		}
 
 		.title {
 			color: white;
 			text-align: center;
+			font-family: cursive;
+			text-shadow: 2px 2px 6px rgb(30, 30, 30);
 		}
 
 		.info {
 			color: white;
+			font-size: 18px;
 		}
 
 		p {
 			color: white;
+			display: block;
+			padding-top: 3px;
+			padding-left: 5px;
+			padding-bottom: 3px;
+		}
+
+		.span {
+			color: white;
+			text-align: center;
+			margin-left: 85%;
+			display: block;
+			border: 1px solid white;
+			border-radius: 50%;
+			width: 25px;
+			height: 25px;
+			line-height: 25px;
+			transform: translate(20px, -25px);
 		}
 
 		label {
 			color: white;
-			margin-left: 60px;
+			font-size: 18px;
+			margin-left: 30px;
 		}
 
 		.previous {
@@ -53,8 +80,9 @@
 		<label for='#guessfield'>Enter a guess: </label>
 		<input type="text" id="guessfield">
 		<button class='submit'> Submit </button>
+		<span class='span'> 10 </span>
 
-		<p class='previous'></p>
+		<p class='previous'> </p>
 		<p class='result'></p>
 		<p class='deviation'></p>
 	</div>
@@ -70,10 +98,11 @@
 		let previous = document.querySelector('.previous')
 		let result = document.querySelector('.result')
 		let deviation = document.querySelector('.deviation')
+		let span = document.querySelector('span')
 		
 		button.onclick = function() {
-			if (previous.textContent == '') {
-				previous.textContent == 'Previous guesses: '
+			if (previous.textContent == ' ') {
+				previous.textContent = 'Previous guesses: '
 			}
 
 			if (numGuess > 0) {
@@ -105,14 +134,15 @@
 				}
 
 				numGuess -= 1
+				span.textContent = numGuess
 				input.focus()
+
+				if (numGuess == 0) {
+					result.textContent = '!!!GAME OVER!!!'
+					result.style.backgroundColor = 'rgb(255, 0, 0)';
+					gameOver()
+				}
 			}
-			else {
-				result.textContent = '!!!GAME OVER!!!'
-				result.style.backgroundColor = 'rgb(255, 0, 0)';
-				gameOver()
-			}
-			
 		}
 
 		function genRandom() {
@@ -122,6 +152,10 @@
 
 		function gameOver() {
 
+		}
+
+		function restartGame() {
+			number = genRandom();
 		}
 	</script>
 </body>
