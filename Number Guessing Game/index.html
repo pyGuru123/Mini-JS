@@ -4,73 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Number Guessing Game</title>
-	<style type="text/css">
-		body {
-			margin: 0;
-			padding: 0;
-			background-color: white;
-		}
-
-		.main {
-			left: 50%;
-			top: 50%;
-			position: absolute;
-			transform: translate(-50%, -50%);
-			width: 500px;
-			height: 300px;
-			border: 1px solid white;
-			border-radius: 10px;
-			background-color: rgb(255,0,120);
-			padding: 20px;
-			box-shadow: 3px 3px 12px rgb(30, 30, 30);
-		}
-
-		.title {
-			color: white;
-			text-align: center;
-			font-family: cursive;
-			text-shadow: 2px 2px 6px rgb(30, 30, 30);
-		}
-
-		.info {
-			color: white;
-			font-size: 18px;
-		}
-
-		p {
-			color: white;
-			display: block;
-			padding-top: 3px;
-			padding-left: 5px;
-			padding-bottom: 3px;
-		}
-
-		.span {
-			color: white;
-			text-align: center;
-			margin-left: 85%;
-			display: block;
-			border: 1px solid white;
-			border-radius: 50%;
-			width: 25px;
-			height: 25px;
-			line-height: 25px;
-			transform: translate(20px, -25px);
-		}
-
-		label {
-			color: white;
-			font-size: 18px;
-			margin-left: 30px;
-		}
-
-		.previous {
-			color: white;
-			margin: 5px;
-			padding: 3px;
-		}
-
-	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<div class='main'>
@@ -84,79 +18,8 @@
 
 		<p class='previous'> </p>
 		<p class='result'></p>
-		<p class='deviation'></p>
 	</div>
 
-	<script type="text/javascript">
-		let number = genRandom();
-		let guesses = ' ';
-		let numGuess = 10;
-
-		let input = document.querySelector('input')
-		let button = document.querySelector('.submit')
-
-		let previous = document.querySelector('.previous')
-		let result = document.querySelector('.result')
-		let deviation = document.querySelector('.deviation')
-		let span = document.querySelector('span')
-		
-		button.onclick = function() {
-			if (previous.textContent == ' ') {
-				previous.textContent = 'Previous guesses: '
-			}
-
-			if (numGuess > 0) {
-				value = input.value;
-				input.value = '';
-
-				if (value == '') {
-					value = '0'
-				}
-
-				if (value == number) {
-					result.textContent = 'You guessed it right';
-					result.style.backgroundColor = 'rgb(0, 255, 0)';
-					previous.textContent = previous.textContent + `${value} `
-					deviation.textContent = '';
-					gameOver();
-				}
-				else if (value < number) {
-					result.textContent = 'Wrong!'
-					result.style.backgroundColor = 'rgb(255, 0, 0)';
-					previous.textContent = previous.textContent + `${value} `
-					deviation.textContent = 'Last guess was too Low!'
-				}
-				else {
-					result.textContent = 'Wrong!'
-					result.style.backgroundColor = 'rgb(255, 0, 0)';
-					previous.textContent = previous.textContent + `${value} `
-					deviation.textContent = 'Last guess was too High!'
-				}
-
-				numGuess -= 1
-				span.textContent = numGuess
-				input.focus()
-
-				if (numGuess == 0) {
-					result.textContent = '!!!GAME OVER!!!'
-					result.style.backgroundColor = 'rgb(255, 0, 0)';
-					gameOver()
-				}
-			}
-		}
-
-		function genRandom() {
-			num = Math.random();
-			return parseInt(num * 100) + 1
-		}
-
-		function gameOver() {
-
-		}
-
-		function restartGame() {
-			number = genRandom();
-		}
-	</script>
+	<script src="script.js"></script>
 </body>
 </html>
