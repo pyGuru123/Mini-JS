@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Random Jokes</title>
+	<script src="https://use.fontawesome.com/e701229423.js"></script>
+	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: rgb(108,117,125);
+			font-family: 'Courgette', cursive;;
+		}
+
+		.main {
+			top: 50%;
+			left: 50%;
+			position: absolute;
+			transform: translate(-50%,-50%);
+			width: 600px;
+			height: 400px;
+			border-radius: 20px;
+			background-color: rgb(215,206,204);
+			box-shadow: 4px 4px 4px #3f3f3f;
+		}
+
+		button {
+			width: 180px;
+			padding: 8px;
+			margin: 60px 35%;
+			color: white;
+			font-size: 22px;
+			background-color: rgb(100,182,172);
+			outline: none;
+			border: 1px solid rgb(100,182,172);
+			border-radius: 3px;
+			box-shadow: 2px 2px 2px #3f3f3f;
+		}
+
+		p {
+			margin-top: -50px;
+			padding: 45px;
+			color: rgb(108,117,125);
+			font-size: 23px;
+		}
+
+		i {
+			color: rgb(108,117,125);
+		}
+
+		h5 {
+			/*margin-left: 75%;*/
+			text-align: right;
+			margin-right: 45px;
+			margin-top: -50px;
+			font-size: 20px;
+			color: rgb(100,182,172);
+		}
+	</style>
+</head>
+<body>
+	<div class='main'>
+		<button type='submit' id='get-joke'>Random Jokes</button>
+		<p><span><i class="fa fa-quote-left fa-3x" aria-hidden="true"></i></span><span class='quote'>  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tenetur sint iste optio placeat dolor labore, reprehenderit ipsum aspernatur blanditiis maiores.</span></p>
+		<h5>- Author</h5>
+	</div>
+
+	<script type="text/javascript">
+		let button = document.querySelector('button')
+		let span = document.querySelector('.quote')
+		let h5 = document.querySelector('h5')
+
+		let api_endpoint = 'https://api.quotable.io/random'
+		let quote, author, color='#6C757D';
+
+		let colors = ['#FAAB1C', '#2490E9','#E46E63', '#6C757D', '#75D5FD',
+					  '#32A956', '#367055']
+		let length = colors.length
+
+		button.addEventListener('click', get_quote)
+		button.onmouseover = function() {
+			button.style.backgroundColor = color;
+			button.style.border = `1px solid ${color}`
+		}
+		button.onmouseout = function() {
+			button.style.backgroundColor = 'rgb(100,182,172)';
+			button.style.border = `1px solid rgb(100,182,172)`
+		}
+ 
+		function get_quote() {
+			let content;
+			fetch(api_endpoint)
+			.then(response => response.json())
+			.then(data => update_quote(data));
+			update_color();
+		}
+
+		function update_quote(data) {
+			quote = '  ' + data['content'];
+			author = '- ' + data['author']
+			span.textContent = quote;
+			h5.textContent = author;
+		}
+
+		function update_color() {
+			let index = Math.floor(Math.random() * length) + 1;
+			color = colors[index];
+			document.body.style.backgroundColor = color;
+		}
+	</script>
+</body>
+</html>
