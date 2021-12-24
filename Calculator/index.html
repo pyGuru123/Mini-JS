@@ -109,15 +109,18 @@
 
 		let colors = []
 
-		equal.addEventListener('click', insert)
+		equal.addEventListener('click', evaluate)
 
 		function insert(text){
 			textfield.value += text;
 		}
-		function update() {
-			console.log('clicked');
-			textfield.value += 'a';
-			console.log(textfield.textContent);
+		function evaluate() {
+			let expression = textfield.value;
+			if (expression){
+				let result = eval(expression)
+				textfield.value = result;
+				console.log(result);
+			}
 		}
 	</script>
 </body>
