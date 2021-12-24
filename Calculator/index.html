@@ -4,70 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Calculator</title>
-	<style type="text/css">
-		body {
-			margin: 0;
-			padding: 0;
-		}
-
-		.main {
-			width: 300px;
-			height: 400px;
-			top: 50%;
-			left: 50%;
-			position: absolute;
-			transform: translate(-50%, -50%);
-			background-color: rgb(235,236,238);
-			background-image: -webkit-linear-gradient(-65deg, rgb(235,236,238) 50%,
-						 rgb(234,51,38) 50%);
-			border-radius: 12px;
-		}
-
-		.inner {
-			width: 280px;
-			height: 360px;
-			top: 50%;
-			left: 50%;
-			position: absolute;
-			transform: translate(-50%, -50%);
-			border: 1px solid rgb(235,236,238);
-			border-radius: 10px;
-			background-color: white;
-		}
-
-		input[type='button'] {
-			border-radius: 50%;
-			color: white;
-			width: 50px;
-			height: 50px;
-			font-size: 19px;
-			font-weight: bold;
-			color: rgb(88,85,85);
-			margin-left: 4px;
-			margin-top: 6px;
-			background-color: rgb(235,236,238);
-			border: 1px solid rgb(235,236,238);
-		}
-
-		#textfield {
-			width: 280px;
-			height: 100px;
-			border-radius: 10px 10px 0px 0px;
-			background-color: rgb(234,51,38);
-			border: 1px solid rgb(234,51,38);
-			font-size: 32px;
-			color: white;
-			text-align: right;
-			line-height: 155px;
-			margin-left: -4px;
-			margin-top: -2px;
-		}
-
-		#equal {
-			background-color: rgb(234,51,38);
-			color: white;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<div class='main'>
@@ -92,7 +29,7 @@
 					<td><input type="button" value="1" onclick="insert('1')"></td>
 					<td><input type="button" value="2" onclick="insert('2')"></td>
 					<td><input type="button" value="3" onclick="insert('3')"></td>
-					<td><input type="button" value="X" onclick="insert('*')"></td>
+					<td><input type="button" value="*" onclick="insert('*')"></td>
 				</tr>
 				<tr>
 					<td><input type="button" value="0" onclick="insert('0')"></td>
@@ -103,25 +40,6 @@
 			</table>
 		</div>
 	</div>
-	<script type="text/javascript">
-		const textfield = document.querySelector('#textfield')
-		const equal = document.querySelector('#equal')
-
-		let colors = []
-
-		equal.addEventListener('click', evaluate)
-
-		function insert(text){
-			textfield.value += text;
-		}
-		function evaluate() {
-			let expression = textfield.value;
-			if (expression){
-				let result = eval(expression)
-				textfield.value = result;
-				console.log(result);
-			}
-		}
-	</script>
+	<script type="text/javascript" src="script.js"></script>
 </body>
 </html>
