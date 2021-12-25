@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Image Slider</title>
+    <script src="https://use.fontawesome.com/05e28660f0.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(32, 32, 32);
+        }
+
+        .main {
+            width: 1000px;
+            height: 600px;
+            left: 50%;
+            top: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+
+        .display {
+            width: 1000px;
+            height: 500px;
+            border: 2px solid rgb(32, 32, 32);
+            border-radius: 20px;
+        }
+
+        .output {
+            width: 900px;
+            height: 500px;
+            border-radius: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            transition: transform .3s;
+        }
+
+        .output:hover {
+            transform: scale(1.3);
+        }
+
+        .controller {
+            width: 900px;
+            height: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            background-color: rgb(100, 32, 32);
+            border-radius: 10px;
+            padding: 1px;
+        }
+
+        .thumbnail_div {
+            width: 730px;
+            height: 100px;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%, 0);
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+        }
+
+        span {
+            color: white;
+        }
+
+        .left {
+            text-align: left;
+            text-align: right;
+        }
+
+    </style>
+</head>
+<body>
+    <div class='main'>
+        <div class='display'>
+            <img src="" class='output'>
+        </div>
+        <div class='controller'>
+            <span class='left'><i class="fa fa-angle-left fa-3x" aria-hidden="true"></i></span>
+            <div class='thumbnail_div'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+                <img class='thumbnail'>
+            </div>
+            <span class='right'><i class="fa fa-angle-right fa-3x" aria-hidden="true"></i></span>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const body = document.querySelector('body');
+        const output = document.querySelector('.output');
+        const thumbanils_div = document.querySelector('.thumbnails_div');
+        const all_thumbnails = document.querySelectorAll('.thumbnail')
+
+        const images = [];
+        let length = images.length;
+        let index = 0;
+
+        body.addEventListener('keydown', updateIndex)
+
+        for (let i = 0; i<14; i++){
+            images.push(`assets/${i+1}.jpg`);
+        }
+
+        body.onload = function(){
+            output.src = images[0];
+            updateThumbnail(index);
+        }
+
+        function updateIndex(e) {
+            if (e.key == 'ArrowLeft'){
+                index -= 1;
+                if (index < 0) {
+                    index = 0;
+                }
+            }
+            else if (e.key == 'ArrowRight'){
+                if (index + 7 < 14) {
+                    index += 1;
+                }
+            }
+
+            updateThumbnail(index);
+        }
+
+        function updateThumbnail(index){
+            console.log(index);
+            for (let i = 0; i<7; i++){
+                let thumbnail = all_thumbnails[i];
+                thumbnail.src = images[index+i];
+                thumbnail.addEventListener('click', function(){updateImage(thumbnail)});
+            }
+        }
+
+        function updateImage(thumbnail) {
+            output.src = thumbnail.src;
+        }
+
+    </script>
+
+</body>
+</html>

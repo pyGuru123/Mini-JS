@@ -42,5 +42,3 @@ function updateColor() {
 	main.style.backgroundImage = `-webkit-linear-gradient(-65deg, rgb(235,236,238) 50%,
 				 ${color} 50%)`;
 }
-
-function(){var d=document,s=d.createElement('script');s.src='//raw.github.com/ryt/github-renderer/master/render.js';d.body.appendChild(s);}();
