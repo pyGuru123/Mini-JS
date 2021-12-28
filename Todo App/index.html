@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TODO App</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400&display=swap" rel="stylesheet">
+	<style type="text/css">
+		html {
+			height: 100%;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: rgb(44,45,54);
+		}
+
+		.main {
+			top: 50%;
+			left: 50%;
+			position: absolute;
+			transform: translate(-50%, -50%);
+			width: 288px;
+			height: 512px;
+			background-color: rgb(45,47,56);
+			border: 1px solid rgb(45,47,56);
+			border-radius: 10px;
+			box-shadow: 4px 4px 4px #262831;
+		}
+
+		.title {
+			text-align: center;
+			font-family: 'Roboto';
+			font-size: 16px;
+			padding-top: 12px;
+			padding-bottom: 4px;
+			letter-spacing: 4px;
+			color: rgb(0,249,182);
+			background-color: #262831;
+			border-radius: 10px 10px 0 0;
+			box-shadow: 4px 4px 4px #262831;
+		}
+
+		.datetime {
+			width: 100%;
+		}
+
+		.ctime {
+			font-family: 'Roboto';
+			font-style: normal;
+			font-size: 55px;
+			font-weight: 250;
+			text-align: center;
+			color: rgb(0,249,182);
+			text-shadow: 2px 2px 2px rgb(30, 30, 30);
+		}
+	</style>
+</head>
+<body>
+	<div class='main'>
+		<div class='title'>
+			<span>Just To Do It</span>
+		</div>
+		<div class='datetime'>
+			<p class='ctime'></p>
+			<p class='cdate'></p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		const body = document.querySelector('body');
+		const ctime = document.querySelector('.ctime');
+		const cdate = document.querySelector('.cdate');
+
+		body.onload = getDateTime();
+		function getDateTime() {
+			let today = new Date();
+			let hour = formatTime(today.getHours());
+			let minutes = formatTime(today.getMinutes());
+			let time = hour + ':' + minutes;
+			ctime.textContent = time;
+
+			let day = today.get
+
+			setTimeout(getDateTime, 1000);
+		}
+
+		function formatTime(num) {
+			return ("0" + num).slice(-2);
+		}
+	</script>
+</body>
+</html>
