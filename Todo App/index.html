@@ -5,6 +5,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TODO App</title>
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400&display=swap" rel="stylesheet">
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
 	<style type="text/css">
 		html {
 			height: 100%;
@@ -23,7 +25,8 @@
 			transform: translate(-50%, -50%);
 			width: 288px;
 			height: 512px;
-			background-color: rgb(45,47,56);
+			background-color: rgb(47,49,58);
+
 			border: 1px solid rgb(45,47,56);
 			border-radius: 10px;
 			box-shadow: 4px 4px 4px #262831;
@@ -33,6 +36,7 @@
 			text-align: center;
 			font-family: 'Roboto';
 			font-size: 16px;
+			user-select: none;
 			padding-top: 12px;
 			padding-bottom: 4px;
 			letter-spacing: 4px;
@@ -44,7 +48,7 @@
 
 		.datetime {
 			width: 100%;
-			/*border: 1px solid white;*/
+			user-select: none;
 		}
 
 		.ctime {
@@ -63,7 +67,7 @@
 			font-size: 14px;
 			text-align: center;
 			margin-top: -35px;
-			color: rgb(102, 102, 102);
+			color: #7A7979;;
 		}
 
 		.tasklist {
@@ -78,6 +82,9 @@
 			border:  none;
 			text-align: center;
 			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 300;
+			font-size: 15px;
 			border-radius: 0 0 0 10px;
 		}
 
@@ -97,18 +104,60 @@
 			color: rgb(232, 232, 232);
 		}
 
+		ul {
+			color: #7A7979;
+			padding: 20px;
+		}
+
+		li {
+			cursor: pointer;
+			text-align: center;
+			list-style: none;
+			text-decoration: none;
+
+			padding-top: 15px;
+			height: 50px;
+			margin-top: 8px;
+			box-sizing: border-box;
+			border: 1px solid #3e3f42;
+			border-radius: 5px;
+
+			font-family: 'Roboto';
+			font-style: normal;
+			font-weight: 300;
+			font-size: 17px;
+
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		i {
+			color: #00f9b6;
+			text-align: right;
+			cursor: pointer;
+			padding-left: 20%;
+		}
+
 	</style>
 </head>
 <body>
 	<div class='main'>
 		<div class='title'>
-			<span>Just To Do It</span>
+			<span>Let's Do It</span>
 		</div>
 		<div class='datetime'>
 			<p class='ctime'></p>
 			<p class='cdate'></p>
 		</div>
-		<div class='tasklist'></div>
+		<div class='tasklist'>
+			<ul class='ul'>
+				<li>Learn Javascript <i class="fa fa-trash"></i></li>
+				<li>Create Tetris Tutorial <i class="fa fa-trash"></i></li>
+				<li>APOD Telegram Bot <i class="fa fa-trash"></i></li>
+			</ul>
+		</div>
 		<div class='newitembox'>
 			<input type="input" placeholder="Type Item">
 			<button>ADD</button>
