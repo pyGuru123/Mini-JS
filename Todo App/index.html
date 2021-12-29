@@ -73,6 +73,11 @@
 		const ctime = document.querySelector('.ctime');
 		const cdate = document.querySelector('.cdate');
 
+		const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
+					'Friday', 'Saturday'];
+		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+					  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 		body.onload = getDateTime();
 		function getDateTime() {
 			let today = new Date();
@@ -81,7 +86,11 @@
 			let time = hour + ':' + minutes;
 			ctime.textContent = time;
 
-			let day = today.get
+			let day = days[today.getDay()];
+			let month = months[today.getMonth()];
+			let year = today.getFullYear().toString().substr(-2)
+			let date = `${day}, ${month} ${year}`;
+			cdate.textContent = date;
 
 			setTimeout(getDateTime, 1000);
 		}
