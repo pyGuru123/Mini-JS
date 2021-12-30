@@ -23,7 +23,7 @@
 			left: 50%;
 			position: absolute;
 			transform: translate(-50%, -50%);
-			width: 288px;
+			width: 312px;
 			height: 512px;
 			background-color: rgb(47,49,58);
 
@@ -73,6 +73,7 @@
 		.tasklist {
 			width: 100%;
 			height: 255px;
+			overflow-y: auto;
 		}
 
 		input[type='input'] {
@@ -102,6 +103,7 @@
 		button:hover {
 			background-color: #07bf8b;
 			color: rgb(232, 232, 232);
+			user-select: none;
 		}
 
 		ul {
@@ -111,11 +113,12 @@
 
 		li {
 			cursor: pointer;
-			text-align: center;
+			position: relative;
 			list-style: none;
 			text-decoration: none;
 
 			padding-top: 15px;
+			padding-left: 10px;
 			height: 50px;
 			margin-top: 8px;
 			box-sizing: border-box;
@@ -126,18 +129,28 @@
 			font-style: normal;
 			font-weight: 300;
 			font-size: 17px;
+			line-height: 21px;
+		    text-align: left;
 
 			-webkit-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
 			user-select: none;
+
+			box-shadow: 0px 2.76726px 2.21381px rgba(0, 0, 0, 0.0196802), 0px 6.6501px 5.32008px rgba(0, 0, 0, 0.0282725), 0px 12.5216px 10.0172px rgba(0, 0, 0, 0.035), 0px 22.3363px 17.869px rgba(0, 0, 0, 0.0417275), 0px 41.7776px 33.4221px rgba(0, 0, 0, 0.0503198), 0px 100px 80px rgba(0, 0, 0, 0.07);
 		}
 
 		i {
+			position: absolute;
+			left: 88%;
+			width: 10%;
 			color: #00f9b6;
-			text-align: right;
 			cursor: pointer;
-			padding-left: 20%;
+		}
+
+		::-webkit-scrollbar {
+		    width: 0px;
+		    background: transparent;
 		}
 
 	</style>
@@ -168,6 +181,9 @@
 		const body = document.querySelector('body');
 		const ctime = document.querySelector('.ctime');
 		const cdate = document.querySelector('.cdate');
+		const input = document.querySelector('input');
+		const add = document.querySelector('button');
+		const ul = document.querySelector('ul');
 
 		const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
 					'Friday', 'Saturday'];
@@ -190,6 +206,16 @@
 
 			setTimeout(getDateTime, 1000);
 		}
+
+		add.addEventListener('click', function() {
+			let task = input.value;
+			task = task.charAt(0).toUpperCase() + task.slice(1);
+			var li = document.createElement('li');
+			li.innerHTML = `${task} <i class="fa fa-trash"></i>`;
+			ul.appendChild(li);
+			input.value = '';
+			input.focus();
+		})
 
 		function formatTime(num) {
 			return ("0" + num).slice(-2);
