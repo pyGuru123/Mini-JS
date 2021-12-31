@@ -148,6 +148,10 @@
 			cursor: pointer;
 		}
 
+		i:hover {
+			color: #07bf8b;
+		}
+
 		::-webkit-scrollbar {
 		    width: 0px;
 		    background: transparent;
@@ -166,9 +170,9 @@
 		</div>
 		<div class='tasklist'>
 			<ul class='ul'>
-				<li>Learn Javascript <i class="fa fa-trash"></i></li>
-				<li>Create Tetris Tutorial <i class="fa fa-trash"></i></li>
-				<li>APOD Telegram Bot <i class="fa fa-trash"></i></li>
+				<li>Learn Javascript <i class="fa fa-trash" job='rem'></i></li>
+				<li>Create Tetris Tutorial <i class="fa fa-trash" job='rem'></i></li>
+				<li>APOD Telegram Bot <i class="fa fa-trash" job='rem'></i></li>
 			</ul>
 		</div>
 		<div class='newitembox'>
@@ -184,6 +188,7 @@
 		const input = document.querySelector('input');
 		const add = document.querySelector('button');
 		const ul = document.querySelector('ul');
+		const trash = document.querySelector('.fa')
 
 		const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
 					'Friday', 'Saturday'];
@@ -207,16 +212,47 @@
 			setTimeout(getDateTime, 1000);
 		}
 
-		add.addEventListener('click', function() {
+		add.addEventListener('click', addTask);
+		function addTask() {
 			let task = input.value;
-			task = task.charAt(0).toUpperCase() + task.slice(1);
-			var li = document.createElement('li');
-			li.innerHTML = `${task} <i class="fa fa-trash"></i>`;
-			ul.appendChild(li);
-			input.value = '';
-			input.focus();
+			if (task) {
+				task = task.charAt(0).toUpperCase() + task.slice(1);
+				var li = document.createElement('li');
+				li.innerHTML = `${task} <i class="fa fa-trash" job="rem"></i>`;
+				ul.appendChild(li);
+				input.value = '';
+				input.focus();
+			}
+		}
+
+		input.addEventListener('keyup', function(event) {
+			if (event.keyCode == 13) {
+				add.click();
+			}
 		})
 
+		ul.addEventListener('click', function(event) {
+			element = event.target;
+			if (element.attributes.length > 0) {
+				if (event.target.attributes.job.value == 'rem') {
+					ul.removeChild(element.parentNode)
+				}
+			}
+		})
+
+		ul.addEventListener('click', function(event) {
+			li = event.target;
+			if (event.target.tagName == 'LI') {
+				let decoration = li.style.textDecoration;
+				if (decoration != 'line-through'){
+					li.style.textDecoration = 'line-through';
+				}
+				else {
+					li.style.textDecoration = 'none';
+				}
+			}
+		})
+			
 		function formatTime(num) {
 			return ("0" + num).slice(-2);
 		}
