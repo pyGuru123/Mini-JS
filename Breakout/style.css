@@ -1,0 +1,15 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background: rgb(60, 60, 60);
+}
+
+canvas {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #eee;
+	border: 2.3px solid rgba(32, 32, 32, 0.5);
+	box-shadow: 3px 3px 10px rgb(12, 12, 12);
+}
