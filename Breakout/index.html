@@ -38,20 +38,19 @@
 
 		var x = WIDTH / 2;
 		var y = HEIGHT / 2;
-		var radius = 10;
-		var ball = new Ball(x, y, radius);
+		var ball = new Ball(x, y, 10);
 
 		var paddleWidth = 80;
 		var paddleHeight = 10;
 		var paddle = new Paddle(paddleWidth, paddleHeight);
 
-		var rows = 3
-		var cols = 3
-		var bwidth = 80;
-		var bheight = 20
+		var rows = 4
+		var cols = 4
+		var bwidth = 60;
+		var bheight = 15;
 		var bpadding = 10;
-		var leftOffset = 14;
-		var topOffset = 10;
+		var leftOffset = 8;
+		var topOffset = 25;
 		var bricks = [];
 		for (let r=0; r<rows; r++) {
 			for (let c=0; c<cols; c++) {
@@ -62,6 +61,9 @@
 			}
 		}
 
+		var score = 0;
+		var lives = 3;
+
 		// Canvas Update function
 
 		function updateCanvas() {
@@ -69,13 +71,21 @@
 			ball.draw();
 			ball.update();
 			paddle.draw();
+			drawScore(score);
+			drawLives(lives);
+
+			if (score == rows*cols) {
+				endGame('You Won!');
+			}
+
 			for (let b = 0; b < bricks.length; b++){
 				if (bricks[b].isalive) {
-					bricks[b].draw();
 					if (bricks[b].hasCollided(ball)) {
 						bricks[b].isalive = false;
 						ball.dy *= -1;
+						score++;
 					}
+					bricks[b].draw();
 				}
 			}
 		}
@@ -83,6 +93,7 @@
 		var interval = setInterval(updateCanvas, 10);
 		document.addEventListener('keydown', keyDown);
 		document.addEventListener('keyup', keyUp);
+		document.addEventListener('mousemove', mouseMove)
 
 		// Game Objects
 
@@ -121,9 +132,15 @@
 				}
 				
 				if (this.y + this.dy >= HEIGHT) {
-					alert('Game Over');
-					document.location.reload();
-					clearInterval(interval);
+					lives--;
+					if (lives <= 0) {
+						endGame('Game Over')
+					}
+					else {
+						ball.x = WIDTH / 2;
+						ball.y = HEIGHT / 2;
+						paddle.x = WIDTH / 2 - paddle.width / 2;
+					}
 				}
 			}
 		}
@@ -190,6 +207,26 @@
 
 		// Functions & Event Handlers
 
+		function drawScore(score) {
+			ctx.font = '16px Arial';
+			ctx.fillStyle = "#0095DD";
+			ctx.fillText(`Score : ${score}`, leftOffset, 18);
+		}
+
+		function drawLives(lives) {
+			ctx.font = '16px Arial';
+			ctx.fillStyle = "#0095DD";
+			ctx.fillText(`Lives : ${lives}`, WIDTH-10*leftOffset, 18);
+		}
+
+		function endGame(msg) {
+			alert(msg);
+			document.location.reload();
+			clearInterval(interval);
+			score = 0;
+			lives = 0;
+		}
+
 		function keyDown(event) {
 			if (event.key == 'ArrowLeft') {
 				paddle.moveLeft = true;
@@ -211,6 +248,13 @@
 				paddle.moveRight = false;
 			}
 			paddle.update();
+		}
+
+		function mouseMove(event) {
+			var relx = event.clientX - canvas.offsetLeft;
+			if (relx > 0 && relx < WIDTH) {
+				paddle.x = relx - paddle.width / 2;
+			}
 		}
 
 		function get_color() {
