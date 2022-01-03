@@ -28,41 +28,128 @@
 		const canvas = document.querySelector('canvas');
 		const ctx = canvas.getContext('2d');
 
-		const width = canvas.width;
-		const height = canvas.height;
-		var x = width / 2;
-		var y = height / 2;
+		const WIDTH = canvas.width;
+		const HEIGHT = canvas.height;
+
+		let colors = ['#FAAB1C', '#2490E9','#E46E63', '#6C757D', '#75D5FD',
+			  '#32A956', '#367055']
+		let length = colors.length
+		var color = get_color();
+
+		var x = WIDTH / 2;
+		var y = HEIGHT / 2;
 		var radius = 10;
-		var dx = 2;
-		var dy = -2;
+		var ball = new Ball(x, y, radius);
 
-		function drawBall() {
-			ctx.beginPath();
-			ctx.arc(x, y, radius, 0, Math.PI*2);
-			ctx.fillStyle = 'red';
-			ctx.fill();
-			ctx.closePath();
-		}
+		var paddleWidth = 80;
+		var paddleHeight = 10;
+		var paddle = new Paddle(paddleWidth, paddleHeight);
 
-		function updateBall(){
-			drawBall();
-			x += dx;
-			y += dy;
-
-			if (y + dy < radius || y + dy > height - radius) {
-				dy *= -1;
-			}
-			if (x + dx < radius || x + dx > width - radius) {
-				dx *= -1
-			}
-		}
+		// Canvas Update function
 
 		function updateCanvas() {
-			ctx.clearRect(0, 0, width, height);
-			updateBall();
+			ctx.clearRect(0, 0, WIDTH, HEIGHT);
+			ball.draw();
+			ball.update();
+			paddle.draw();
 		}
 
 		setInterval(updateCanvas, 10);
+		document.addEventListener('keydown', keyDown);
+		document.addEventListener('keyup', keyUp);
+
+		// Game Objects
+
+		function Ball(x, y, radius) {
+			this.x = x;
+			this.y = y;
+			this.radius = radius;
+
+			this.dx = 2;
+			this.dy = -2;
+
+			this.draw = () => {
+				ctx.beginPath();
+				ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+				ctx.fillStyle = color;
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			this.update = () => {
+				this.x += this.dx;
+				this.y += this.dy;
+
+				if (this.y + this.dy < this.radius || this.y + this.dy > HEIGHT - this.radius) {
+					this.dy *= -1;
+				}
+				if (this.x + this.dx < this.radius || this.x + this.dx > WIDTH - this.radius) {
+					this.dx *= -1
+				}
+			}
+		}
+
+		function Paddle(width, height) {
+			this.width = width;
+			this.height = height;
+
+			this.x = WIDTH / 2 - this.width / 2;
+			this.y = HEIGHT - this.height;
+			this.speed = 8;
+			this.moveLeft = false;
+			this.moveRight = false;
+
+			this.draw = () => {
+				ctx.beginPath();
+				ctx.rect(this.x, this.y, this.width, this.height);
+				ctx.fillStyle = color;
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			this.update = () => {
+				if (this.moveLeft) {
+					this.x -= this.speed;
+				}
+
+				if (this.moveRight) {
+					this.x += this.speed;
+				}
+			}
+		}
+
+		// Functions & Event Handlers
+
+		function keyDown(event) {
+			if (event.key == 'ArrowLeft') {
+				paddle.moveLeft = true;
+			}
+
+			else if (event.key == 'ArrowRight') {
+				paddle.moveRight = true;
+			}
+
+			paddle.update();
+		}
+
+		function keyUp(event) {
+			if (event.key == 'ArrowLeft') {
+				paddle.moveLeft = false;
+			}
+
+			else if (event.key == 'ArrowRight') {
+				paddle.moveRight = false;
+			}
+			paddle.update();
+		}
+
+		function get_color() {
+			let index = Math.floor(Math.random() * length) + 1;
+			color = colors[index];
+			return color;
+		}
 	</script>
 </body>
 </html>
