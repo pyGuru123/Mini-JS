@@ -45,6 +45,23 @@
 		var paddleHeight = 10;
 		var paddle = new Paddle(paddleWidth, paddleHeight);
 
+		var rows = 3
+		var cols = 3
+		var bwidth = 80;
+		var bheight = 20
+		var bpadding = 10;
+		var leftOffset = 14;
+		var topOffset = 10;
+		var bricks = [];
+		for (let r=0; r<rows; r++) {
+			for (let c=0; c<cols; c++) {
+				var x = leftOffset + c * (bpadding +  bwidth);
+				var y = topOffset + r * (bpadding + bheight);
+				var brick = new Brick(x, y, bwidth, bheight);
+				bricks.push(brick);
+			}
+		}
+
 		// Canvas Update function
 
 		function updateCanvas() {
@@ -52,9 +69,18 @@
 			ball.draw();
 			ball.update();
 			paddle.draw();
+			for (let b = 0; b < bricks.length; b++){
+				if (bricks[b].isalive) {
+					bricks[b].draw();
+					if (bricks[b].hasCollided(ball)) {
+						bricks[b].isalive = false;
+						ball.dy *= -1;
+					}
+				}
+			}
 		}
 
-		setInterval(updateCanvas, 10);
+		var interval = setInterval(updateCanvas, 10);
 		document.addEventListener('keydown', keyDown);
 		document.addEventListener('keyup', keyUp);
 
@@ -81,11 +107,23 @@
 				this.x += this.dx;
 				this.y += this.dy;
 
-				if (this.y + this.dy < this.radius || this.y + this.dy > HEIGHT - this.radius) {
-					this.dy *= -1;
-				}
 				if (this.x + this.dx < this.radius || this.x + this.dx > WIDTH - this.radius) {
 					this.dx *= -1
+				}
+
+				if (this.y + this.dy < this.radius) {
+					this.dy *= -1;
+				}
+				else if (this.y + this.dy > HEIGHT - this.radius- paddle.height) {
+					if (this.x > paddle.x && this.x < paddle.x + paddle.width) {
+						this.dy *= -1;
+					}
+				}
+				
+				if (this.y + this.dy >= HEIGHT) {
+					alert('Game Over');
+					document.location.reload();
+					clearInterval(interval);
 				}
 			}
 		}
@@ -111,12 +149,42 @@
 
 			this.update = () => {
 				if (this.moveLeft) {
-					this.x -= this.speed;
+					if (this.x + this.speed > 0) {
+						this.x -= this.speed;
+					}
 				}
 
 				if (this.moveRight) {
-					this.x += this.speed;
+					if (this.x + paddle.width < WIDTH) {
+						this.x += this.speed;	
+					}
 				}
+			}
+		}
+
+		function Brick(x, y, width, height) {
+			this.x = x;
+			this.y  =y;
+			this.width = width;
+			this.height = height;
+			this.isalive = true;
+
+			this.draw = () => {
+				ctx.beginPath();
+				ctx.rect(this.x, this.y, this.width, this.height);
+				ctx.fillStyle = color;
+				ctx.fill();
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			this.hasCollided = (ball) => {
+				if (ball.x > this.x && ball.x < this.x + this.width &&
+					ball.y > this.y && ball.y < this.y + this.height) {
+					return true;
+				}
+
+				return false;
 			}
 		}
 
@@ -149,6 +217,10 @@
 			let index = Math.floor(Math.random() * length) + 1;
 			color = colors[index];
 			return color;
+		}
+
+		function print() {
+			console.log(arguments)
 		}
 	</script>
 </body>
