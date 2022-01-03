@@ -4,8 +4,65 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Breakout</title>
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			background: rgb(72, 72, 72);
+		}
+
+		canvas {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: #eee;
+			border: 1.3px solid rgba(0, 0, 255, 0.5);
+		}
+	</style>
 </head>
 <body>
+	<canvas width='288' height='512'></canvas>
 
+	<script type="text/javascript">
+		const canvas = document.querySelector('canvas');
+		const ctx = canvas.getContext('2d');
+
+		const width = canvas.width;
+		const height = canvas.height;
+		var x = width / 2;
+		var y = height / 2;
+		var radius = 10;
+		var dx = 2;
+		var dy = -2;
+
+		function drawBall() {
+			ctx.beginPath();
+			ctx.arc(x, y, radius, 0, Math.PI*2);
+			ctx.fillStyle = 'red';
+			ctx.fill();
+			ctx.closePath();
+		}
+
+		function updateBall(){
+			drawBall();
+			x += dx;
+			y += dy;
+
+			if (y + dy < radius || y + dy > height - radius) {
+				dy *= -1;
+			}
+			if (x + dx < radius || x + dx > width - radius) {
+				dx *= -1
+			}
+		}
+
+		function updateCanvas() {
+			ctx.clearRect(0, 0, width, height);
+			updateBall();
+		}
+
+		setInterval(updateCanvas, 10);
+	</script>
 </body>
 </html>
