@@ -105,6 +105,14 @@
 			margin-top: -4px;
 		}
 
+		.labelup2 {
+			margin-top: 3px;
+		}
+
+		.distdose {
+			margin-top: 1px;
+		}
+
 		input[type="input"] {
 			border: none;
 			outline: none;
@@ -139,13 +147,13 @@
 			margin-right: 30px;
 		}
 
-		.searchpin {
+		.searchpin, .searchdist{
 			border: none;
 			outline: none;
 			width: 80%;
 			margin-left: 30px;
-			margin-top: 30px;
-			padding: 7px;
+			margin-top: 39px;
+			padding: 4px;
 			color: rgb(92,92,92);
 			font-size: 22px;
 			font-family: 'Open Sans', sans-serif;
@@ -155,7 +163,11 @@
 			cursor: pointer;
 		}
 
-		.searchpin:hover {
+		.searchdist {
+			margin-top: 15px;
+		}
+
+		.searchpin:hover, .searchdist:hover {
 			background-color: rgb(6, 6, 6);
 		}
 
@@ -256,6 +268,27 @@
 			font-family: 'Open Sans', sans-serif;
 		}
 
+		select {
+			width: 80%;
+			border: none;
+			outline: none;
+			background-color: inherit;
+			margin-left: 20px;
+			color: rgb(92,92,92);
+			font-family: 'Open Sans', sans-serif;
+			font-size: 16px;
+			font-weight: 500;
+		}
+
+		option {
+			border: none;
+			outline: none;
+			color: rgb(92,92,92);
+			font-family: 'Open Sans', sans-serif;
+			font-size: 18px;
+			font-weight: 500;
+		}
+
 	</style>
 </head>
 <body>
@@ -280,7 +313,7 @@
 		const distbtn = document.querySelector('.bydist');
 		const box = document.querySelector('.box');
 
-		const statedIDs = 
+		states_json = 'https://raw.githubusercontent.com/pyGuru123/Mini-JS/main/CoWin%20Vaccines/states.json'
 
 		body.onload = function(){
 			pinbtn.click();
@@ -343,9 +376,60 @@
 
 		function searchbydistDOM() {
 			box.innerHTML = `
-				<label> Pincode </label>
-				<input type="input" class="getpin" placeholder="201010"><br/>
+				<label> Select State </label>
+				<select class="stateselect" id="names" placeholder="select">
+					<option value=""> State </option>
+				</select>
+				<label class="labelup2"> Select District </label>
+				<select class="distselect" id="district">Select</select>
+				<label class='labelup2'> Date </label>
+				<input type="input" class="getdate" placeholder="01-01-2022">
+				<label class="distdose"> Dose </label>
+				<input type="radio" name="dose" id="dose1" value="dose1"> <span class='radio'>Dose 1</span>
+				<input type="radio" class="radio2" name="dose" id="dose2" value="dose1"> <span class='radio'>Dose 2</span>
+				<button class='searchdist'> FIND A SLOT </button>
 			`;
+
+			var stateslist = document.querySelector('.stateselect');
+			var districtslist = document.querySelector('.distselect');
+
+			fetch(states_json)
+			.then(response => response.json())
+			.then(data => {
+				states = data["states"];
+				for (var i=0; i<states.length; i++) {
+					state = states[i];
+					id = state["state_id"];
+					state = state["state_name"];
+					var option = document.createElement('option')
+					option.value = id;
+					option.text = state;
+					stateslist.appendChild(option)
+				}
+			})
+
+			stateslist.addEventListener('change', () => {
+				state = stateslist.value;
+				districtslist.length = 0;
+				if (state) {
+					let url = `https://cdn-api.co-vin.in/api/v2/admin/location/districts/${state}`
+
+					fetch(url)
+					.then(response => response.json())
+					.then(data => {
+						districts = data["districts"];
+						for (var i=0; i<districts.length; i++) {
+							district = districts[i];
+							id = district["district_id"];
+							state = district["district_name"];
+							var option = document.createElement('option')
+							option.value = id;
+							option.text = state;
+							districtslist.appendChild(option)
+						}
+					})
+				}
+			})
 		}
 
 		function showResultByPin(data, dose){
