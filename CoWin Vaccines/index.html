@@ -27,6 +27,7 @@
 			width: 100%;
 			height: 60px;
 			background-color: rgb(18,72,158);
+			cursor: pointer;
 		}
 
 		.header p {
@@ -308,6 +309,7 @@
 
 	<script type="text/javascript">
 		const body = document.querySelector('body');
+		const header = document.querySelector('.header')
 		const searchdiv = document.querySelector('.searchdiv')
 		const pinbtn = document.querySelector('.bypin');
 		const distbtn = document.querySelector('.bydist');
@@ -326,6 +328,10 @@
 			distbtn.style.borderBottomColor = 'rgb(16,25,32)'
 
 			searchbypinDOM();
+		}
+
+		header.onclick = function(){
+			location.reload();
 		}
 
 		distbtn.onclick = function() {
@@ -392,6 +398,7 @@
 
 			var stateslist = document.querySelector('.stateselect');
 			var districtslist = document.querySelector('.distselect');
+			var searchdist = document.querySelector('.searchdist');
 
 			fetch(states_json)
 			.then(response => response.json())
@@ -430,6 +437,29 @@
 					})
 				}
 			})
+
+			searchdist.onclick = function() {
+				var dist = document.querySelector('.distselect');
+				var date = document.querySelector('.getdate');
+				var dose1 = document.querySelector('input[id="dose1"]');
+				var dose2 = document.querySelector('input[id="dose2"]');
+
+				var dose = ''; 
+				if (dose1.checked) {
+					dose = dose1.value;
+				}
+				else if (dose2.checked) {
+					dose = dose2.value;
+				}
+
+				if (dist.value && date.value && dose){
+					var apiendpoint = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=${dist.value}&date=${date.value}`
+					console.log(apiendpoint);
+					fetch(apiendpoint)
+					.then(response => response.json())
+					.then(data => showResultByPin(data, dose));
+				}
+			}
 		}
 
 		function showResultByPin(data, dose){
