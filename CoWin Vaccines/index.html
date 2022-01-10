@@ -280,6 +280,8 @@
 		const distbtn = document.querySelector('.bydist');
 		const box = document.querySelector('.box');
 
+		const statedIDs = 
+
 		body.onload = function(){
 			pinbtn.click();
 		}
@@ -340,7 +342,10 @@
 		}
 
 		function searchbydistDOM() {
-			box.innerHTML = '';
+			box.innerHTML = `
+				<label> Pincode </label>
+				<input type="input" class="getpin" placeholder="201010"><br/>
+			`;
 		}
 
 		function showResultByPin(data, dose){
