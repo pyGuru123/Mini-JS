@@ -56,6 +56,13 @@
 		const TYPES = ['I', 'Z', 'S', 'L', 'J', 'T', 'O']
 		const FPS = 24;
 
+		const COLORS = {
+			1 : '#4ec1f6',
+			2 : '#1da110',
+			3 : '#ad06c8',
+			4 : '#fc5b7a'
+		}
+
 		// Canvas Update *****************************************************
 
 		let tetris = new Tetris(ROWS, COLS);
@@ -67,7 +74,7 @@
 
 		function updateCanvas() {
 			ctx.clearRect(0, 0, WIDTH, HEIGHT);
-			drawGrid();
+			// drawGrid();
 
 			counter += 1;
 			if (counter > 10000) {
@@ -75,17 +82,43 @@
 			}
 
 			if (can_move) {
-				if (counter % (FPS / (tetris.level*2))) {
+				if ((counter % (FPS / (tetris.level * 2)) == 0) || move_down) {
 					if (!tetris.gameover) {
 						tetris.go_down();
 					}
 				}
 			}
 
+			// drawing grid values
+			for (let y=0; y<ROWS; y++) {
+				for (let x=0; x<COLS; x++) {
+					if (tetris.board[y][x] > 0) {
+						val = tetris.board[y][x];
+						color = COLORS[val];
+						drawCell(x*CELLSIZE, y*CELLSIZE, CELLSIZE, CELLSIZE, color);
+					}
+					
+				}
+			}
 
+			// drawing falling objects
+			for (let i=0; i<4; i++) {
+				for (let j=0; j<4; j++) {
+					if (tetris.figure.image().includes(i*4+j)) {
+						var color = COLORS[tetris.figure.color];
+						var x = CELLSIZE * (tetris.figure.x + j);
+						var y = CELLSIZE * (tetris.figure.y + i);
+						drawCell(x, y, CELLSIZE, CELLSIZE, color)
+					}
+				}
+			}
+
+			// HUD
+			drawCell(0, HEIGHT-120, WIDTH, 120, '#1F194C')
+			drawCell(0, 0, WIDTH, HEIGHT, '#1F194C', true)
 		}
 
-		var interval = setInterval(updateCanvas, 10);
+		var interval = setInterval(updateCanvas, FPS);
 		document.addEventListener('keydown', keyDown);
 		document.addEventListener('keyup', keyUp);
 
@@ -105,10 +138,12 @@
 				move_down = true;
 			}
 			if (event.key == ' ') {
-				print('yes')
 				tetris.go_space();
 			}
-			print(event.key, event.keyCode)
+			if (event.key == 'r' || event.key == 'R') {
+				tetris = new Tetris(ROWS, COLS);
+				tetris.new_figure();
+			}
 		}
 
 		function keyUp() {
@@ -175,7 +210,7 @@
 				var rerun = false;
 				for (let y=ROWS-1; y>0; y--) {
 					var is_full = true;
-					for (let x=0; x<COLS-1; x++) {
+					for (let x=0; x<COLS; x++) {
 						if (this.board[y][x] == 0) {
 							is_full = false;
 						}
@@ -200,7 +235,9 @@
 				for (let i=0; i<4; i++) {
 					for (let j=0; j<4; j++) {
 						if (this.figure.image().includes(i*4+j)) {
-							this.board[i+this.figure.y][j+this.figure.x] = this.figure.color;
+							var y = i+this.figure.y;
+							var x = j+this.figure.x;
+							this.board[y][x] = this.figure.color;
 						}
 					}
 				}
@@ -221,7 +258,7 @@
 
 			this.go_down = function() {
 				this.figure.y += 1;
-				if (this.intersects) {
+				if (this.intersects()) {
 					this.figure.y -= 1;
 					this.freeze();
 				}
@@ -230,7 +267,7 @@
 			this.go_side = function(dx) {
 				this.figure.x += dx;
 				if (this.intersects()) {
-					this.figure.x -= 1;
+					this.figure.x -= dx;
 				}
 			}
 
@@ -251,6 +288,18 @@
 			ctx.moveTo(x1, y1);
 			ctx.lineTo(x2, y2);
 			ctx.stroke();
+		}
+
+		function drawCell(x, y, w, h, color, stroke=false) {
+			ctx.beginPath();
+			ctx.rect(x, y, w, h);
+			ctx.fillStyle = color;
+			if (!stroke){
+				ctx.fill();
+				ctx.stroke();
+			}
+			ctx.stroke();
+			ctx.closePath();
 		}
 
 		function drawGrid() {
