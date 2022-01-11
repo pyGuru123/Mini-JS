@@ -65,7 +65,7 @@ function searchbypinDOM() {
 			console.log(apiendpoint);
 			fetch(apiendpoint)
 			.then(response => response.json())
-			.then(data => showResultByPin(data, dose));
+			.then(data => showResult(data, dose));
 		}
 	}
 }
@@ -147,12 +147,12 @@ function searchbydistDOM() {
 			console.log(apiendpoint);
 			fetch(apiendpoint)
 			.then(response => response.json())
-			.then(data => showResultByPin(data, dose));
+			.then(data => showResult(data, dose));
 		}
 	}
 }
 
-function showResultByPin(data, dose){
+function showResult(data, dose){
 	searchdiv.innerHTML = `
 		<p class='available'> Available slots </p>
 	`;

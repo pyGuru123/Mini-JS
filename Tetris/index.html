@@ -16,15 +16,131 @@
 			left: 50%;
 			position: absolute;
 			transform: translate(-50%, -50%);
-			width : 288px;
-			height: 512px;
+			width : 300px;
+			height: 500px;
 			border: 1px solid rgb(21,24,29);
 			background-color: rgb(21,24,29);
+		}
+
+		canvas {
+			background-color: rgb(21, 24, 29);
+			border: 2px solid rgb(217, 217, 217);
 		}
 	</style>
 </head>
 <body>
 	<div class='main'>
+		<canvas class='board' width="300" height="500"></canvas>
 	</div>
+
+	<script type="text/javascript">
+		const canvas = document.querySelector('canvas');
+		const ctx = canvas.getContext('2d');
+
+		const WIDTH = 300;
+		const HEIGHT = 500;
+		const CELLSIZE = 20;
+		const ROWS = (HEIGHT - 120) / CELLSIZE;
+		const COLS = WIDTH / CELLSIZE;
+
+		const FIGURES = {
+				'I' : [[1, 5, 9, 13], [4, 5, 6, 7]],
+		        'Z' : [[4, 5, 9, 10], [2, 6, 5, 9]],
+		        'S' : [[6, 7, 9, 10], [1, 5, 6, 10]],
+		        'L' : [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
+		        'J' : [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
+		        'T' : [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
+		        'O' : [[1, 2, 5, 6]]
+			}
+
+		const TYPES = ['I', 'Z', 'S', 'L', 'J', 'T', 'O']
+
+		// Canvas Update *****************************************************
+
+		function updateCanvas() {
+			ctx.clearRect(0, 0, WIDTH, HEIGHT);
+			drawGrid();
+		}
+
+		var interval = setInterval(updateCanvas, 10);
+
+		// Objects ***********************************************************
+
+		function Tetramino(x, y) {
+			this.x = x;
+			this.y = y;
+			this.type = TYPES[random(TYPES.length-1)];
+			this.shape = FIGURES[this.type]
+			this.color = random(1, 4);
+			this.rotation = 0;
+
+			this.image = () => {
+				return this.shape[this.rotation];
+			}
+
+			this.rotate = () => {
+				this.rotation = (this.rotation + 1) % this.shape.length;
+			}
+		}
+
+		function Tetris(rows, cols) {
+			this.rows = rows;
+			this.cols = cols;
+			this.score = 0;
+			this.level = 1;
+			this.board = createBoard();
+		}
+
+		t = new Tetris(ROWS, COLS);
+
+		// Functions *********************************************************
+
+		function drawLine(x1, y1, x2, y2) {
+			ctx.strokeStyle = 'red';
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			ctx.stroke();
+		}
+
+		function drawGrid() {
+			for (let i=0; i<ROWS+1; i++) {
+				drawLine(0, CELLSIZE*i, WIDTH, CELLSIZE*i);
+			}
+			for (let j=0; j<COLS; j++) {
+				drawLine(CELLSIZE*j, 0, CELLSIZE*j, HEIGHT-120);
+			}
+		}
+
+		function createArray() {
+			array = []
+			for (let i=0; i<COLS; i++){
+				array[i] = 0;
+			}
+			return array
+		}
+
+		function createBoard() {
+			var board = [];
+				for (let i=0; i<ROWS; i++) {
+					board.push(createArray());
+				}
+			return board;
+		}
+
+		function random(min, max) {
+			if (arguments.length == 1) {
+				max = arguments[0] + 1;
+				min = 0;
+			}
+			return Math.floor(Math.random() * (max)) + min
+		}
+
+		function print() {
+			for (value of arguments) {
+				console.log(value);
+			}
+		}
+	</script>
 </body>
 </html>
