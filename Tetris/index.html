@@ -54,15 +54,68 @@
 			}
 
 		const TYPES = ['I', 'Z', 'S', 'L', 'J', 'T', 'O']
+		const FPS = 24;
 
 		// Canvas Update *****************************************************
+
+		let tetris = new Tetris(ROWS, COLS);
+		tetris.new_figure();
+
+		let counter = 0;
+		let move_down = false;
+		let can_move = true;
 
 		function updateCanvas() {
 			ctx.clearRect(0, 0, WIDTH, HEIGHT);
 			drawGrid();
+
+			counter += 1;
+			if (counter > 10000) {
+				counter = 0
+			}
+
+			if (can_move) {
+				if (counter % (FPS / (tetris.level*2))) {
+					if (!tetris.gameover) {
+						tetris.go_down();
+					}
+				}
+			}
+
+
 		}
 
 		var interval = setInterval(updateCanvas, 10);
+		document.addEventListener('keydown', keyDown);
+		document.addEventListener('keyup', keyUp);
+
+		// Event Handling ****************************************************
+
+		function keyDown(event) {
+			if (event.key == 'ArrowLeft') {
+				tetris.go_side(-1);
+			}
+			if (event.key == 'ArrowRight') {
+				tetris.go_side(1);
+			}
+			if (event.key == 'ArrowUp') {
+				tetris.rotate();
+			}
+			if (event.key == 'ArrowDown') {
+				move_down = true;
+			}
+			if (event.key == ' ') {
+				print('yes')
+				tetris.go_space();
+			}
+			print(event.key, event.keyCode)
+		}
+
+		function keyUp() {
+			if (event.key == 'ArrowDown') {
+				move_down = false;
+			}
+		} 
 
 		// Objects ***********************************************************
 
@@ -74,11 +127,11 @@
 			this.color = random(1, 4);
 			this.rotation = 0;
 
-			this.image = () => {
+			this.image = function() {
 				return this.shape[this.rotation];
 			}
 
-			this.rotate = () => {
+			this.rotate = function() {
 				this.rotation = (this.rotation + 1) % this.shape.length;
 			}
 		}
@@ -89,9 +142,106 @@
 			this.score = 0;
 			this.level = 1;
 			this.board = createBoard();
-		}
+			this.next = null;
+			this.gameover = false;
 
-		t = new Tetris(ROWS, COLS);
+			this.new_figure = function() {
+				if (this.next == null){
+					this.next = new Tetramino(5, 0);
+				}
+
+				this.figure = this.next;
+				this.next = new Tetramino(5, 0);
+			}
+
+			this.intersects = function() {
+				intersection = false;
+				for (let i=0; i<4; i++) {
+					for (let j=0; j<4; j++) {
+						if (this.figure.image().includes(i*4+j)) {
+							if ((i+this.figure.y > this.rows-1) ||
+							   (j+this.figure.x > this.cols-1) ||
+							   (j+this.figure.x < 0) ||
+							   (this.board[i + this.figure.y][j + this.figure.x] > 0)) {
+							   		intersection = true;
+						   }
+						}
+					}
+				}
+				return intersection;
+			}
+
+			this.removeLine = function() {
+				var rerun = false;
+				for (let y=ROWS-1; y>0; y--) {
+					var is_full = true;
+					for (let x=0; x<COLS-1; x++) {
+						if (this.board[y][x] == 0) {
+							is_full = false;
+						}
+					}
+					if (is_full) {
+						this.board.splice(y, 1);
+						this.board.unshift(createArray());
+						this.score += 1;
+						if (this.score % 10 == 0) {
+							this.level += 1
+						} 
+						rerun = true;
+					}
+				}
+				if (rerun) {
+					this.removeLine();
+				}
+
+			}
+
+			this.freeze = function() {
+				for (let i=0; i<4; i++) {
+					for (let j=0; j<4; j++) {
+						if (this.figure.image().includes(i*4+j)) {
+							this.board[i+this.figure.y][j+this.figure.x] = this.figure.color;
+						}
+					}
+				}
+				this.removeLine();
+				this.new_figure();
+				if (this.intersects()) {
+					this.gameover = true;
+				}
+			}
+
+			this.go_space = function() {
+				while (!this.intersects()) {
+					this.figure.y += 1;
+				}
+				this.figure.y -= 1;
+				this.freeze();
+			}
+
+			this.go_down = function() {
+				this.figure.y += 1;
+				if (this.intersects) {
+					this.figure.y -= 1;
+					this.freeze();
+				}
+			}
+
+			this.go_side = function(dx) {
+				this.figure.x += dx;
+				if (this.intersects()) {
+					this.figure.x -= 1;
+				}
+			}
+
+			this.rotate = function() {
+				rotation = this.figure.rotation;
+				this.figure.rotate();
+				if (this.intersects()) {
+					this.figure.rotation = rotation;
+				}
+			}
+		}
 
 		// Functions *********************************************************
 
