@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Courgette&family=Jura&family=Open+Sans&display=swap');
+html, body {
+	margin: 0;
+	padding: 0;
+	background-color: rgb(10,13,18);
+}
+
+.main {
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	width : 300px;
+	height: 500px;
+	border: 1px solid rgb(21,24,29);
+	background-color: rgb(21,24,29);
+}
+
+canvas {
+	background-color: rgb(21, 24, 29);
+	border: 2px solid #1F194C;
+}
