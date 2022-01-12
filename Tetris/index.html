@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Tetris</title>
 	<style type="text/css">
+		@import url('https://fonts.googleapis.com/css2?family=Courgette&family=Jura&family=Open+Sans&display=swap');
 		html, body {
 			margin: 0;
 			padding: 0;
@@ -24,12 +25,13 @@
 
 		canvas {
 			background-color: rgb(21, 24, 29);
-			border: 2px solid rgb(217, 217, 217);
+			border: 2px solid #1F194C;
 		}
 	</style>
 </head>
 <body>
 	<div class='main'>
+		<canvas width='288' height='512' class='box'></canvas>
 		<canvas class='board' width="300" height="500"></canvas>
 	</div>
 
@@ -114,11 +116,25 @@
 			}
 
 			// HUD
-			drawCell(0, HEIGHT-120, WIDTH, 120, '#1F194C')
-			drawCell(0, 0, WIDTH, HEIGHT, '#1F194C', true)
+			drawCell(0, HEIGHT-120, WIDTH, 120, '#1F194C');
+			drawCell(0, 0, WIDTH, HEIGHT, '#1F194C', true);
+
+			for (let i=0; i<4; i++) {
+				for (let j=0; j<4; j++) {
+					if (tetris.next.image().includes(i*4+j)) {
+						var color = COLORS[tetris.next.color];
+						var x = CELLSIZE * (tetris.next.x + j - 4);
+						var y = HEIGHT - 100 + CELLSIZE * (tetris.next.y + i);
+						drawCell(x, y, CELLSIZE, CELLSIZE, color)
+					}
+				}
+			}
+
+			drawText(tetris.score, 42, '#ffe900', WIDTH-50, HEIGHT-60);
+			drawText('TETRIS', 20, '#ffe900', WIDTH/2-30, HEIGHT-10);
 		}
 
-		var interval = setInterval(updateCanvas, FPS);
+		var interval = setInterval(updateCanvas, 1000/FPS);
 		document.addEventListener('keydown', keyDown);
 		document.addEventListener('keyup', keyUp);
 
@@ -186,6 +202,7 @@
 				}
 
 				this.figure = this.next;
+				this.shadow = this.figure;
 				this.next = new Tetramino(5, 0);
 			}
 
@@ -296,9 +313,13 @@
 			ctx.fillStyle = color;
 			if (!stroke){
 				ctx.fill();
+				ctx.strokeStyle = '#fff';
 				ctx.stroke();
 			}
-			ctx.stroke();
+			else {
+				ctx.strokeStyle = color;
+				ctx.stroke();
+			}
 			ctx.closePath();
 		}
 
@@ -309,6 +330,12 @@
 			for (let j=0; j<COLS; j++) {
 				drawLine(CELLSIZE*j, 0, CELLSIZE*j, HEIGHT-120);
 			}
+		}
+
+		function drawText(text, size, color, x, y) {
+			ctx.font = `${size}px "Jura", sans-serif`;
+			ctx.fillStyle = color;
+			ctx.fillText(`${text}`, x, y);
 		}
 
 		function createArray() {
