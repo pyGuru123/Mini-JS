@@ -8,15 +8,19 @@ for (var i=0; i<100; i++) {
 console.log(yValues);
 
 new Chart("myChart", {
-  type: "bar",
+  type: "line",
   data: {
     labels: xValues,
     datasets: [{
-      backgroundColor: "red",
+      pointRadius : 4,
+      pointBackgroundColor: "rgb(200, 200, 200)",
+      borderColor: "rgb(218, 218, 218)",
+      // backgroundColor: "red",
       data: yValues
     }]
   },
   options: {
+    backgroundColor : "rgb(32, 32, 32)",
     legend: {display: false},
     title: {
       display: true,
